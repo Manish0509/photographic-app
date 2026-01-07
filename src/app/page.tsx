@@ -10,8 +10,10 @@ import {
   setAvailableInstitutions,
 } from "@/lib/slices/filterSlice";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const {
     searchQuery,
@@ -30,6 +32,10 @@ export default function Home() {
       dispatch(fetchWorks(true));
     }
   }, [isFetched, loading, dispatch]);
+
+  useEffect(() => {
+    router.push("/categories");
+  });
 
   useEffect(() => {
     if (works.length > 0) {
@@ -64,50 +70,48 @@ export default function Home() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <div className="w-full max-w-4xl p-6">
-        <div className="w-full flex items-center justify-center mb-4">
-          <input
-            className="px-3 py-2 border border-gray-200 rounded-md w-full max-w-md"
-            value={searchQuery}
-            onChange={handleSearchChange}
-            placeholder="Search by name"
-          />
-        </div>
-        <div className="flex items-center justify-center gap-2 mb-6">
-          <select
-            className="border border-gray-200 rounded-full px-3 py-2"
-            value={selectedAuthor || ""}
-            onChange={handleAuthorChange}
-          >
-            <option value="">All Authors</option>
-            {availableAuthors.map((author) => (
-              <option key={author} value={author}>
-                {author}
-              </option>
-            ))}
-          </select>
-          <select
-            className="border border-gray-200 rounded-full px-3 py-2"
-            value={selectedInstitution || ""}
-            onChange={handleInstitutionChange}
-          >
-            <option value="">All Institutions</option>
-            {availableInstitutions.map((institution) => (
-              <option key={institution} value={institution}>
-                {institution}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="text-center">
-          <Link
-            href="/categories"
-            className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            View All Categories
-          </Link>
-        </div>
+    <div className="min-h-screen w-full p-6">
+      <div className="w-full flex flex-col mb-4">
+        <input
+          className="px-3 py-2 border border-gray-200 rounded-md"
+          value={searchQuery}
+          onChange={handleSearchChange}
+          placeholder="Search by name"
+        />
+      </div>
+      <div className="flex items-center justify-start gap-2 my-5">
+        <select
+          className="border border-gray-200 rounded-full px-3 py-2"
+          value={selectedAuthor || ""}
+          onChange={handleAuthorChange}
+        >
+          <option value="">All Authors</option>
+          {availableAuthors.map((author) => (
+            <option key={author} value={author}>
+              {author}
+            </option>
+          ))}
+        </select>
+        <select
+          className="border border-gray-200 rounded-full px-3 py-2"
+          value={selectedInstitution || ""}
+          onChange={handleInstitutionChange}
+        >
+          <option value="">All Institutions</option>
+          {availableInstitutions.map((institution) => (
+            <option key={institution} value={institution}>
+              {institution}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="text-center">
+        <Link
+          href="/categories"
+          className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          View All Categories
+        </Link>
       </div>
     </div>
   );
