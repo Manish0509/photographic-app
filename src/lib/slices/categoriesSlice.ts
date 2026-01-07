@@ -7,6 +7,7 @@ interface CategoriesState {
   totalCount: number;
   loading: boolean;
   error: string | null;
+  isFetched: boolean;
 }
 
 const initialState: CategoriesState = {
@@ -15,6 +16,7 @@ const initialState: CategoriesState = {
   totalCount: 0,
   loading: false,
   error: null,
+  isFetched: false,
 };
 
 // Async thunk for fetching works data
@@ -54,6 +56,7 @@ const categoriesSlice = createSlice({
         state.works = action.payload.works;
         state.filteredWorks = action.payload.works;
         state.totalCount = action.payload.totalCount;
+        state.isFetched = true;
       })
       .addCase(fetchWorks.rejected, (state, action) => {
         state.loading = false;

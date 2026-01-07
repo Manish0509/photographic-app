@@ -21,11 +21,15 @@ export default function Home() {
     availableInstitutions,
   } = useAppSelector((state) => state.filter);
 
-  useEffect(() => {
-    dispatch(fetchWorks(true));
-  }, [dispatch]);
+  const { works, isFetched, loading } = useAppSelector(
+    (state) => state.categories
+  );
 
-  const { works } = useAppSelector((state) => state.categories);
+  useEffect(() => {
+    if (!isFetched && !loading) {
+      dispatch(fetchWorks(true));
+    }
+  }, [isFetched, loading, dispatch]);
 
   useEffect(() => {
     if (works.length > 0) {

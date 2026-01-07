@@ -24,11 +24,8 @@ const Page = () => {
     filteredWorks: afterFilterFromRedux,
     loading,
     error,
+    isFetched,
   } = useAppSelector((state) => state.categories);
-  const filteredWorks = afterFilterFromRedux.slice(
-    0,
-    currentPage * itemPerPage
-  );
   const {
     searchQuery,
     selectedAuthor,
@@ -37,9 +34,14 @@ const Page = () => {
     availableInstitutions,
   } = useAppSelector((state) => state.filter);
 
+  const displayedCount = currentPage * itemPerPage;
+  const filteredWorks = afterFilterFromRedux.slice(0, displayedCount);
+
   useEffect(() => {
-    dispatch(fetchWorks(true));
-  }, []);
+    if (!isFetched && !loading) {
+      dispatch(fetchWorks(true));
+    }
+  }, [isFetched, loading, dispatch]);
 
   useEffect(() => {
     if (works.length > 0) {
@@ -78,16 +80,19 @@ const Page = () => {
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setSearchQuery(e.target.value));
+    setCurrentPage(1);
   };
 
   const handleAuthorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     dispatch(setSelectedAuthor(e.target.value === "" ? null : e.target.value));
+    setCurrentPage(1);
   };
 
   const handleInstitutionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     dispatch(
       setSelectedInstitution(e.target.value === "" ? null : e.target.value)
     );
+    setCurrentPage(1);
   };
 
   if (loading) {
